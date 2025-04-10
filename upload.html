@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload File - Generate Master Key</title>
+  <style>
+    body { font-family: Arial; margin: 40px; background-color: #f9f9f9; }
+    .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
+    h2 { text-align: center; }
+    input, select, button { width: 100%; padding: 10px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Upload File</h2>
+    <input type="file" id="fileInput" />
+    <select id="roleSelect">
+      <option value="admin">Admin</option>
+      <option value="editor">Editor</option>
+      <option value="viewer">Viewer</option>
+    </select>
+    <button onclick="uploadFile()">Upload & Generate Master Key</button>
+    <p><strong>Generated Master Key:</strong> <span id="masterKeyDisplay">---</span></p>
+    <p><a href="download.html">Go to Download Page</a></p>
+  </div>
+
+  <script>
+    function generateMasterKey() {
+      return 'KEY-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+    }
+
+    function uploadFile() {
+      const fileInput = document.getElementById("fileInput");
+      const role = document.getElementById("roleSelect").value;
+
+      if (!fileInput.files.length) {
+        alert("Please select a file.");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        const fileData = e.target.result;
+        const key = generateMasterKey();
+        localStorage.setItem("cloud_file", fileData);
+        localStorage.setItem("cloud_key", key);
+        localStorage.setItem("cloud_role", role);
+        document.getElementById("masterKeyDisplay").innerText = key;
+        alert("File uploaded successfully. Save the master key!");
+      };
+
+      reader.readAsDataURL(file);
+    }
+  </script>
+</body>
+</html>

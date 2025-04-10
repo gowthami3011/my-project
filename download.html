@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Download File</title>
+  <style>
+    body { font-family: Arial; margin: 40px; background-color: #f9f9f9; }
+    .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
+    h2 { text-align: center; }
+    input, select, button { width: 100%; padding: 10px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Download File</h2>
+    <input type="text" id="masterKeyInput" placeholder="Enter Master Key" />
+    <select id="roleInput">
+      <option value="">Select Role</option>
+      <option value="admin">Admin</option>
+      <option value="editor">Editor</option>
+      <option value="viewer">Viewer</option>
+    </select>
+    <button onclick="downloadFile()">Download</button>
+    <p id="statusMsg"></p>
+    <p><a href="upload.html">Back to Upload Page</a></p>
+  </div>
+
+  <script>
+    function downloadFile() {
+      const keyInput = document.getElementById("masterKeyInput").value;
+      const role = document.getElementById("roleInput").value;
+      const storedKey = localStorage.getItem("cloud_key");
+      const storedRole = localStorage.getItem("cloud_role");
+      const fileData = localStorage.getItem("cloud_file");
+
+      const status = document.getElementById("statusMsg");
+
+      if (!keyInput || !role) {
+        status.innerText = "Please enter both master key and role.";
+        return;
+      }
+
+      if (keyInput === storedKey && role === storedRole) {
+        const a = document.createElement("a");
+        a.href = fileData;
+        a.download = "downloaded_file";
+        a.click();
+        status.innerText = "Download started.";
+      } else {
+        status.innerText = "Invalid master key or role!";
+      }
+    }
+  </script>
+</body>
+</html>
